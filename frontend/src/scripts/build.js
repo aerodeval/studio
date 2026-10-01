@@ -228,6 +228,7 @@ ${pageScripts
 	const routerConfig = routerFile ? "routerConfig" : ""
 
 	const rendererContent = `import "@/index.css"
+import "@/styles/app.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"
 import "@/setupFrappeUIResource"

@@ -1,0 +1,15 @@
+/* Rendered apps only: the builder has its own chrome. Without these the canvas stays white
+   in dark mode, and a dark iframe gets an opaque backdrop for its mismatched color-scheme. */
+html,
+body {
+	color: var(--ink-gray-9);
+	background-color: var(--surface-base);
+}
+
+:root {
+	color-scheme: light;
+}
+
+[data-theme="dark"] {
+	color-scheme: dark;
+}
