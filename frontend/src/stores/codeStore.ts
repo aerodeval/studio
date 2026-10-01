@@ -770,6 +770,7 @@ const useCodeStore = defineStore("codeStore", () => {
 		resources,
 		setPageResources,
 		teardownPage,
+		stopResourceWatchers,
 		// variables
 		variables,
 		setPageVariables,

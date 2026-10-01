@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from "vue"
-import { useRoute } from "vue-router"
+import { onUnmounted, watch, ref } from "vue"
+import { useRoute, useRouter, type RouteLocationNormalized } from "vue-router"
 import { usePageMeta } from "frappe-ui"
 
 import { findPageWithRoute } from "@/utils/helpers"
@@ -21,6 +21,7 @@ import Block from "@/utils/block"
 
 const store = useAppStore()
 const route = useRoute()
+const router = useRouter()
 const codeStore = useCodeStore()
 const componentStore = useComponentStore()
 const page = ref<StudioPage | null>(null)
@@ -29,7 +30,7 @@ const rootBlock = ref<Block | null>(null)
 
 let loadedPath: string | null = null
 async function handleRouteChange() {
-	const currentPath = resolveCurrentPath()
+	const currentPath = resolvePagePath(route)
 	if (currentPath && currentPath === loadedPath && page.value) {
 		// param-only navigation (/articles/a -> /articles/b)
 		return
@@ -40,7 +41,7 @@ async function handleRouteChange() {
 let loadToken = 0
 async function loadPage() {
 	const token = ++loadToken
-	const currentPath = resolveCurrentPath()
+	const currentPath = resolvePagePath(route)
 	if (!currentPath) {
 		rootBlock.value = null
 		return
@@ -61,13 +62,20 @@ async function loadPage() {
 	loadedPath = currentPath
 }
 
-function resolveCurrentPath(): string | undefined {
-	const { pageRoute } = route.params as { pageRoute: string[] }
+function resolvePagePath(location: RouteLocationNormalized): string | undefined {
+	const { pageRoute } = location.params as { pageRoute: string[] }
 	// registered page routes carry isDynamic meta
-	if (route.meta?.isDynamic) return route.matched?.[0]?.path
+	if (location.meta?.isDynamic) return location.matched?.[0]?.path
 	if (pageRoute) return pageRoute[0]
 	return "/"
 }
+
+// Before the route changes: resource params read the route, and a page that is leaving
+// would otherwise refetch with the next page's params before loadPage tears it down.
+const removeLeaveGuard = router.beforeEach((to) => {
+	if (resolvePagePath(to) !== loadedPath) codeStore.stopResourceWatchers()
+})
+onUnmounted(removeLeaveGuard)
 
 watch(() => route.path, handleRouteChange, { immediate: true })
 
