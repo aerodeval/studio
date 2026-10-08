@@ -11,7 +11,6 @@ import { onPageScriptHotUpdate } from "@/data/studioPageScripts"
 import AppComponent from "@/components/AppComponent.vue"
 
 import useAppStore from "@/stores/appStore"
-import useComponentStore from "@/stores/componentStore"
 import { pageScopeKey } from "@/stores/codeStore"
 
 const { page, scope, root } = useLoadedPage()
@@ -21,6 +20,5 @@ onUnmounted(() => scope.teardownPage())
 onUnmounted(onPageScriptHotUpdate((name, setup) => scope.applyPageScriptHotUpdate(name, setup)))
 
 useAppStore().activePage = page
-useComponentStore().setComponents(page.components || [])
 usePageMeta(() => ({ title: page.page_title }))
 </script>

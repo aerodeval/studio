@@ -5,6 +5,7 @@ import { getBlockInstance } from "@/utils/serializer"
 import { createPageScope, type PageScope } from "@/page/pageScope"
 import type { StudioPage } from "@/types/Studio/StudioPage"
 import type Block from "@/utils/block"
+import useComponentStore from "@/stores/componentStore"
 
 export type LoadedPage = {
 	page: StudioPage
@@ -36,6 +37,7 @@ export async function loadPage(router: Router, to: RouteLocationNormalized, from
 		await scope.setPageResources(page, false, page.resources)
 		await scope.setPageScript(page, Boolean(page.is_standard))
 		if (navigation !== latestNavigation) return scope.teardownPage()
+		useComponentStore().setComponents(page.components || [])
 		const root = getBlockInstance(JSON.parse(page.blocks)[0])
 		loadedPages.set(to.fullPath, { page, scope, pageRoute, root })
 	} catch (error) {

@@ -47,6 +47,7 @@ const useComponentStore = defineStore("componentStore", () => {
 				const componentDoc = await fetchComponent(componentName);
 				cacheComponent(componentDoc)
 			} catch {
+				if (componentMap.has(componentName)) return
 				const missingComponentDoc = {
 					name: componentName,
 					component_id: componentName,
