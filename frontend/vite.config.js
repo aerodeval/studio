@@ -58,6 +58,8 @@ export default defineConfig(async () => {
 			// Required for the app renderer running on webserver port
 			// https://vite.dev/guide/backend-integration
 			origin: `http://127.0.0.1:${viteDevServerPort}`,
+			// Bind where `origin` points: Node resolves "localhost" to ::1 only, which leaves assets unreachable.
+			host: "127.0.0.1",
 			allowedHosts: true,
 			// Allow cross-origin requests from the renderer running on webserver port to Vite dev server.
 			cors: true,
