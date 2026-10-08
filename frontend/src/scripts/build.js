@@ -237,6 +237,7 @@ import ErrorPage from "@/pages/ErrorPage.vue"
 import AppRenderer from "@/AppRenderer.vue"
 import { resourcesPlugin } from "frappe-ui"
 ${routerImport}
+import { initSocket } from "@/socket"
 
 ${frappeUIImports}
 ${frappeUIMoleculeImports}
@@ -252,6 +253,7 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(resourcesPlugin)
+app.provide("socket", initSocket())
 
 ${componentRegistrations}
 window.__APP_COMPONENTS__ = app._context.components
