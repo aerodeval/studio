@@ -43,6 +43,9 @@ export default {
 		"../../frappe/ui/src/**/*.{vue,js,ts,jsx,tsx}",
 		"../../*/studio/**/*.{vue,js,ts,jsx,tsx,json}",
 		"!../../*/studio/**/node_modules/**",
+		// code a Studio app shares with its Frappe app's other frontends
+		"../../*/shared/**/*.{vue,js,ts}",
+		"!../../*/shared/**/node_modules/**",
 	],
 	theme: {
 		extend: {},
